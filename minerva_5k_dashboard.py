@@ -23,20 +23,19 @@ tab1, tab2, tab3 = st.tabs(["Performance Overview", "Run Times", "Runs Completed
 
 with tab1:
     st.subheader("Performance Overview: Runs Completed vs. Best Time")
-    fig1 = px.scatter(df, x="Runs Completed", y="Best Time", size="Position", color="Name", hover_name="Name",
-                      title="Performance Overview: Runs Completed vs. Best Time")
+    fig1 = px.scatter(df, x="Runs Completed", y="Best Time", size="Position", color="Name", hover_name="Name")
     st.plotly_chart(fig1, use_container_width=True)
 
 with tab2:
-    st.subheader("Run Times Overview")
-    fig2 = px.bar(df, x="Name", y="Total Seconds", color="Name", title="Run Times of Participants")
+    st.subheader("Run Times Overview (Lower is Better)")
+    fig2 = px.bar(df, x="Name", y="Total Seconds", color="Name")
     # Customizing the axis labels for clarity
-    fig2.update_layout(xaxis_title="Participant Name", yaxis_title="Total Seconds (Lower is Better)")
+    fig2.update_layout(xaxis_title="Participant Name", yaxis_title="Total Seconds (Best Recorded Times)")
     st.plotly_chart(fig2, use_container_width=True)
 
 with tab3:
     st.subheader("Runs Completed Overview")
-    fig3 = px.bar(df, x="Name", y="Runs Completed", color="Name", title="Runs Completed by Participants")
+    fig3 = px.bar(df, x="Name", y="Runs Completed", color="Name")
     # Customizing the axis labels for clarity
     fig3.update_layout(xaxis_title="Participant Name", yaxis_title="Runs Completed")
     st.plotly_chart(fig3, use_container_width=True)
