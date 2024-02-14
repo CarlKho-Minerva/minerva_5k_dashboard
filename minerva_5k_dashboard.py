@@ -67,41 +67,61 @@ for i, tab in enumerate(tabs):
             st.plotly_chart(fig, use_container_width=True)
         elif i == 1:
             # Generate and display the "Fastest Female Students" plot
-            # You can use fastest_female_students dataframe here to plot
-            pass
+            st.subheader("Fastest Female Students")
+            if not fastest_female_students.empty:
+                fig = px.bar(fastest_female_students, x='full_name', y='total_seconds', title="Fastest Female Students")
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.write("No data available.")
         elif i == 2:
             # Generate and display the "Fastest Male Students" plot
-            # You can use fastest_male_students dataframe here to plot
-            pass
+            st.subheader("Fastest Male Students")
+            if not fastest_male_students.empty:
+                fig = px.bar(fastest_male_students, x='full_name', y='total_seconds', title="Fastest Male Students")
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.write("No data available.")
         elif i == 3:
             # Generate and display the "Fastest Non-binary Students" plot
-            # You can use fastest_non_binary_students dataframe here to plot
-            pass
+            st.subheader("Fastest Non-binary Students")
+            if not fastest_non_binary_students.empty:
+                fig = px.bar(fastest_non_binary_students, x='full_name', y='total_seconds', title="Fastest Non-binary Students")
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.write("No data available.")
         elif i == 4:
             # Generate and display the "Fastest Faculty/Staff" plot
-            # You can use fastest_faculty_staff dataframe here to plot
-            pass
+            st.subheader("Fastest Faculty/Staff")
+            if not fastest_faculty_staff.empty:
+                fig = px.bar(fastest_faculty_staff, x='full_name', y='total_seconds', title="Fastest Faculty/Staff")
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.write("No data available.")
         elif i == 5:
             # Generate and display the "Runners/Walkers with at Least 15 5Ks" plot
-            # You can use runners_with_at_least_15_5ks dataframe here to plot
-            pass
+            st.subheader("Runners/Walkers with at Least 15 5Ks")
+            if not runners_with_at_least_15_5ks.empty:
+                # For example, you might want to display a histogram of their running times or a bar chart of their distances
+                pass
+            else:
+                st.write("No data available.")
         elif i == 6:
             # Generate and display the "Most Improved Running Time" plot
-            # This requires additional processing and plotting
-            pass
+            st.subheader("Most Improved Running Time")
+            st.write("This feature is not yet implemented.")
         elif i == 7:
             # Generate and display the "Longest Walk" plot
-            # You can use longest_walk dataframe here to plot
-            pass
+            st.subheader("Longest Walk")
+            if not longest_walk.empty:
+                fig = px.bar(longest_walk, x='full_name', y='distance', title="Longest Walk")
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.write("No data available.")
         elif i == 8:
             # Generate and display the "Median Runner/Walker" plot
-            # You can use median_runner dataframe here to plot
-            pass
-
-# Repeat the above process with appropriate modifications for each tab
-# Use the prepared dataframes like `fastest_female_students`, `fastest_male_students`, etc., for plotting
-
-# Note: For plots requiring more complex calculations (e.g., most improved running time),
-# you may need to perform additional data processing.
-
-# Ensure to adapt the dataset paths, column names, and specific processing as per your application's context.
+            st.subheader("Median Runner/Walker")
+            if not median_runner.empty:
+                fig = px.bar(median_runner, x='full_name', y='total_seconds', title="Median Runner/Walker")
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.write("No data available.")
