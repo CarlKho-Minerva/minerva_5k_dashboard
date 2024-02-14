@@ -19,7 +19,7 @@ st.title('Minerva 5K Challenge Dashboard')
 # Winners and Data Visualization
 st.subheader('🏆 Winner')
 winners = df[df['Position'] == 1]
-st.header(winners)
+st.write(winners)
 
 fig = px.scatter(df, x="Runs Completed", y="Best Time", size="Position", color="Name", 
                  hover_name="Name", title="Runs Completed vs. Best Time")
