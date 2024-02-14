@@ -1,7 +1,7 @@
 # cheatsheet: https://cheat-sheet.streamlit.app/
 
 import streamlit as st
-import plotly.express as px
+import plotly.express as px # installed
 import pandas as pd
 
 # Convert the records to a DataFrame for better handling
