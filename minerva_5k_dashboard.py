@@ -13,6 +13,11 @@ df = pd.DataFrame([
     {"Name": "Casey Jordan", "Runs Completed": 2, "Best Time": "30:00", "Position": 5},
 ])
 
+# Winners and Data Visualization
+st.subheader('🏆 Winner')
+winners = df[df['Position'] == 1]
+st.write(winners)
+
 # Convert "Best Time" to total seconds for easier plotting
 df['Total Seconds'] = pd.to_timedelta('00:' + df['Best Time']).dt.total_seconds()
 
