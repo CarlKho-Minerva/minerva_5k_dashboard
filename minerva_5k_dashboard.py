@@ -17,9 +17,9 @@ df = pd.DataFrame([
 st.title('Minerva 5K Challenge Dashboard')
 
 # Winners and Data Visualization
-st.subheader('🏆 Winners & Performance Overview')
+st.subheader('🏆 Winner')
 winners = df[df['Position'] == 1]
-st.write(winners)
+st.header(winners)
 
 fig = px.scatter(df, x="Runs Completed", y="Best Time", size="Position", color="Name", 
                  hover_name="Name", title="Runs Completed vs. Best Time")
@@ -35,22 +35,20 @@ if participant_name:
     else:
         st.warning('No participant found with this name.')
 
-# Filters for dynamic exploration within Participant Details
-position_to_highlight = st.selectbox('Highlight Position:', ['All'] + sorted(df['Position'].unique().tolist()))
-if position_to_highlight != 'All':
-    df_filtered = df[df['Position'] == position_to_highlight]
-else:
-    df_filtered = df
-st.write(df_filtered)
-
-# Display total and filtered participants
-total_participants = len(df)
-filtered_participants = len(df_filtered)
-st.metric(label="Total Participants", value=total_participants)
-st.metric(label="Filtered Participants", value=filtered_participants)
-
 # Additional interactivity based on user input
 num_runs_filter = st.slider('Filter by minimum runs completed:', 0, df['Runs Completed'].max(), 1)
 filtered_by_runs = df[df['Runs Completed'] >= num_runs_filter]
 if not filtered_by_runs.empty:
     st.write(filtered_by_runs)
+
+# Display total and filtered participants in 2-column layout
+col1, col2 = st.columns(2)
+with col1:
+    total_participants = len(df)
+    st.metric(label="Total Participants", value=total_participants)
+with col2:
+    filtered_participants = len(df_filtered)
+    st.metric(label="Filtered Participants", value=filtered_participants)
+
+
+
