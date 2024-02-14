@@ -13,6 +13,8 @@ df = pd.DataFrame([
     {"Name": "Casey Jordan", "Runs Completed": 2, "Best Time": "30:00", "Position": 5},
 ])
 
+st.title('Minerva 5K Challenge Dashboard')
+
 # Winners and Data Visualization
 st.subheader('🏆 Winner')
 winners = df[df['Position'] == 1]
@@ -20,8 +22,6 @@ st.write(winners)
 
 # Convert "Best Time" to total seconds for easier plotting
 df['Total Seconds'] = pd.to_timedelta('00:' + df['Best Time']).dt.total_seconds()
-
-st.title('Minerva 5K Challenge Dashboard')
 
 # Creating tabs for each plot
 tab1, tab2, tab3 = st.tabs(["Performance Overview", "Run Times", "Runs Completed"])
