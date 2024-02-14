@@ -1,10 +1,9 @@
 # cheatsheet: https://cheat-sheet.streamlit.app/
-
 import streamlit as st
 import plotly.express as px
 import pandas as pd
 
-# Sample data
+# Data preparation
 df = pd.DataFrame([
     {"Name": "Alex Smith", "Runs Completed": 5, "Best Time": "25:30", "Position": 1},
     {"Name": "Jamie Taylor", "Runs Completed": 4, "Best Time": "26:15", "Position": 2},
@@ -13,37 +12,52 @@ df = pd.DataFrame([
     {"Name": "Casey Jordan", "Runs Completed": 2, "Best Time": "30:00", "Position": 5},
 ])
 
+# Dashboard layout
 st.title('Minerva 5K Challenge Dashboard')
 
-# Champion section
-champion = df[df['Position'] == 1]
-st.subheader('🏆 Champion')
-st.write(champion)
+# Overview section
+champion = df.loc[df['Position'].idxmin()]
+st.markdown(f"### 🏆 Champion: {champion['Name']}")
+st.markdown(f"**Best Time:** {champion['Best Time']} | **Runs Completed:** {champion['Runs Completed']}")
 
-# Data Visualization
-st.subheader('📊 Data Visualization')
-fig = px.scatter(df, x="Runs Completed", y="Best Time", size="Position", color="Name", hover_name="Name",
-                 title="Performance Overview: Runs Completed vs. Best Time")
+# Participant count
+st.metric(label="Total Participants", value=len(df))
+
+# Data visualization
+st.subheader('📊 Performance Overview')
+fig = px.bar(df, x='Name', y='Runs Completed', color='Position', 
+             labels={'Position': 'Position Rank'}, 
+             hover_data=['Best Time'], title="Runs Completed by Participants")
+fig.update_layout(xaxis_title="Participant", yaxis_title="Runs Completed", 
+                  coloraxis_showscale=False)
 st.plotly_chart(fig, use_container_width=True)
 
-# Interactive Search Bar
-st.subheader('🔍 Search Participants')
-search_query = st.text_input('Enter a name to search:')
-if search_query:
-    # Filter participants based on search
-    filtered_participants = df[df['Name'].str.contains(search_query, case=False)].sort_values(by="Position")
-    if not filtered_participants.empty:
-        for _, row in filtered_participants.iterrows():
-            st.write(f"{row['Name']} - Position: {row['Position']}")
+# Search and detailed view
+st.subheader('🔍 Find Participant Details')
+participant_name = st.text_input('Enter a name to search:', '')
+if participant_name:
+    participant_details = df[df['Name'].str.contains(participant_name, case=False)]
+    if not participant_details.empty:
+        st.write(participant_details)
     else:
         st.warning('No participant found with this name.')
 
-# Toggleable Table of All Participants
+# Toggle for full participant table
 if st.checkbox('Show All Participants'):
     st.subheader('👥 All Participants')
-    st.write(df.sort_values(by="Position"))
+    st.dataframe(df.sort_values(by='Position'))
 
-# Sidebar (optional additions)
-st.sidebar.header('Dashboard Controls')
-# Example: sidebar metric display
-st.sidebar.metric(label="Total Participants", value=len(df))
+# Additional insights (Optional, can be added if needed)
+with st.expander("See Additional Insights"):
+    # Placeholder for any additional insights you might want to add
+    st.text("Insights or extra data can go here.")
+
+# Sidebar for quick filters (Optional)
+st.sidebar.header('Quick Filters')
+position_filter = st.sidebar.selectbox('Filter by Position:', ['All'] + list(df['Position'].unique()), index=0)
+
+if position_filter != 'All':
+    filtered_data = df[df['Position'] == position_filter]
+    st.sidebar.dataframe(filtered_data[['Name', 'Best Time']])
+else:
+    st.sidebar.write("No filter applied.")
