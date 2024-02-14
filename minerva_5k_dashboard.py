@@ -21,11 +21,24 @@ st.subheader('🏆 Winner')
 winners = df[df['Position'] == 1]
 st.write(winners)
 
-# Convert "Best Time" from string to datetime.timedelta for sorting
-df['Best Time'] = pd.to_timedelta(df['Best Time'].apply(lambda x: f"0:{x}"))
-df.sort_values(by='Best Time', ascending=False, inplace=True)  # Sort for leaderboard view
+import streamlit as st
+import plotly.express as px
+import pandas as pd
 
-st.title('Minerva 5K Challenge Dashboard')
+# Assuming df is already defined and sorted as in your setup
+
+# Example conversion of "Best Time" for plotting (ensure this is done appropriately)
+df['Best Time Seconds'] = df['Best Time'].dt.total_seconds()
+
+# Plotting
+fig_run_times = px.bar(df, x='Name', y='Best Time Seconds', color='Name', title="Run Times Leaderboard")
+# Customize y-axis labels to display time in MM:SS format
+fig_run_times.update_layout(yaxis_tickvals=[i * 60 for i in range(max(df['Best Time Seconds'])//60 + 1)], 
+                            yaxis_ticktext=[f'{i:02d}:00' for i in range(max(df['Best Time Seconds'])//60 + 1)],
+                            xaxis_title="Participant", 
+                            yaxis_title="Best Time")
+
+st.plotly_chart(fig_run_times, use_container_width=True)
 
 # Tabs for different plots
 tab1, tab2, tab3 = st.tabs(["Run Times Leaderboard", "Runs Completed", "Performance Overview"])
