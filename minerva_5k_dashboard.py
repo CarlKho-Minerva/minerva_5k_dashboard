@@ -39,8 +39,13 @@ median_time = df['total_seconds'].median()
 df['time_difference'] = (df['total_seconds'] - median_time).abs()
 median_runner = df.sort_values(by='time_difference').head(1)
 
-# Prepare summary data for each plot
-# Note: For more detailed plots, additional processing may be required
+# Calculate improvement for each participant
+df_sorted = df.sort_values(by='timestamp')
+improvement_df = df_sorted.groupby('email').agg({'total_seconds': ['first', 'last']})
+improvement_df.columns = ['time_before', 'time_after']
+improvement_df['improvement_seconds'] = improvement_df['time_before'] - improvement_df['time_after']
+improvement_df['improvement_percentage'] = (improvement_df['improvement_seconds'] / improvement_df['time_before']) * 100
+
 
 # Title for the dashboard
 st.title('Minerva 5K Challenge Dashboard')
@@ -136,7 +141,26 @@ for i, tab in enumerate(tabs):
         elif i == 6:
             # Generate and display the "Most Improved Running Time" plot
             st.subheader("Most Improved Running Time")
-            st.write("This feature is not yet implemented.")
+            if not improvement_df.empty:
+                # Bar chart showing improvement for each participant
+                fig_improvement = px.bar(improvement_df.reset_index(), x='email', y='improvement_seconds', 
+                                          title="Most Improved Running Time")
+                fig_improvement.update_xaxes(title='Participant Email')
+                fig_improvement.update_yaxes(title='Improvement (Seconds)')
+                st.plotly_chart(fig_improvement, use_container_width=True)
+
+                # Data table showing improvement details
+                st.subheader("Improvement Details")
+                st.write(improvement_df.reset_index())
+
+                # Bar chart showing improvement percentage for each participant
+                fig_improvement_percentage = px.bar(improvement_df.reset_index(), x='email', y='improvement_percentage', 
+                                                    title="Percentage Improvement in Running Time")
+                fig_improvement_percentage.update_xaxes(title='Participant Email')
+                fig_improvement_percentage.update_yaxes(title='Improvement Percentage')
+                st.plotly_chart(fig_improvement_percentage, use_container_width=True)
+            else:
+                st.write("No data available.")
         elif i == 7:
             # Generate and display the "Longest Walk" plot
             st.subheader("Longest Walk")
