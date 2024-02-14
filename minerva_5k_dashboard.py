@@ -27,7 +27,7 @@ st.title('Minerva 5K Challenge Dashboard')
 tab1, tab2, tab3 = st.tabs(["Run Times Leaderboard", "Runs Completed", "Performance Overview"])
 
 with tab1:
-    st.subheader('🏃 Run Times Leaderboard')
+    st.subheader('🏃 Run Times Leaderboard (lower is better)')
     # Using bar chart to display run times
     fig_run_times = px.bar(df, x='Name', y='Best Time', color='Name', title="Run Times Leaderboard")
     fig_run_times.update_layout(xaxis_title="Participant", yaxis_title="Best Time", yaxis_tickformat='%H:%M:%S')
