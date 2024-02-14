@@ -4,7 +4,7 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 
-# Convert the records to a DataFrame for better handling
+# Sample data
 df = pd.DataFrame([
     {"Name": "Alex Smith", "Runs Completed": 5, "Best Time": "25:30", "Position": 1},
     {"Name": "Jamie Taylor", "Runs Completed": 4, "Best Time": "26:15", "Position": 2},
@@ -13,51 +13,44 @@ df = pd.DataFrame([
     {"Name": "Casey Jordan", "Runs Completed": 2, "Best Time": "30:00", "Position": 5},
 ])
 
+# Dashboard Title
 st.title('Minerva 5K Challenge Dashboard')
 
-tab1, tab2, tab3 = st.tabs(["Winners", "Participant Details", "Data Visualization"])
+# Winners and Data Visualization
+st.subheader('🏆 Winners & Performance Overview')
+winners = df[df['Position'] == 1]
+st.write(winners)
 
-with tab1:
-    st.subheader('🏆 Winners')
-    winners = df[df['Position'] == 1]
-    st.write(winners)
+fig = px.scatter(df, x="Runs Completed", y="Best Time", size="Position", color="Name", 
+                 hover_name="Name", title="Runs Completed vs. Best Time")
+st.plotly_chart(fig, use_container_width=True)
 
-with tab2:
-    st.subheader('👥 Participant Details')
-    participant_name = st.text_input('Enter a name to search:', '')
-    if participant_name:
-        participant_details = df[df['Name'].str.contains(participant_name, case=False)]
-        if not participant_details.empty:
-            st.write(participant_details)
-        else:
-            st.warning('No participant found with this name.')
+# Participant Details
+st.subheader('👥 Participant Details')
+participant_name = st.text_input('Enter a name to search:', '')
+if participant_name:
+    participant_details = df[df['Name'].str.contains(participant_name, case=False)]
+    if not participant_details.empty:
+        st.write(participant_details)
+    else:
+        st.warning('No participant found with this name.')
 
-with tab3:
-    st.subheader('📊 Data Visualization')
-    fig = px.scatter(df, x="Runs Completed", y="Best Time", size="Position", color="Name", hover_name="Name",
-                     title="Performance Overview: Runs Completed vs. Best Time")
-    st.plotly_chart(fig, use_container_width=True)
-
-# Sidebar filters for dynamic exploration
-st.sidebar.header('Filters')
-position_to_highlight = st.sidebar.selectbox('Highlight Position:', ['All'] + sorted(df['Position'].unique().tolist()))
-
+# Filters for dynamic exploration within Participant Details
+position_to_highlight = st.selectbox('Highlight Position:', ['All'] + sorted(df['Position'].unique().tolist()))
 if position_to_highlight != 'All':
     df_filtered = df[df['Position'] == position_to_highlight]
 else:
     df_filtered = df
+st.write(df_filtered)
 
-st.sidebar.metric(label="Total Participants", value=len(df))
-st.sidebar.metric(label="Filtered Participants", value=len(df_filtered))
-
-# Use of progress and status
-with st.expander("See calculation progress"):
-    my_bar = st.progress(0)
-    for percent_complete in range(100):
-        my_bar.progress(percent_complete + 1)
-    st.success('Data loaded successfully!')
+# Display total and filtered participants
+total_participants = len(df)
+filtered_participants = len(df_filtered)
+st.metric(label="Total Participants", value=total_participants)
+st.metric(label="Filtered Participants", value=filtered_participants)
 
 # Additional interactivity based on user input
-num_runs_filter = st.sidebar.slider('Filter by minimum runs completed:', 0, df['Runs Completed'].max(), 1)
+num_runs_filter = st.slider('Filter by minimum runs completed:', 0, df['Runs Completed'].max(), 1)
 filtered_by_runs = df[df['Runs Completed'] >= num_runs_filter]
-st.sidebar.write(filtered_by_runs)
+if not filtered_by_runs.empty:
+    st.write(filtered_by_runs)
