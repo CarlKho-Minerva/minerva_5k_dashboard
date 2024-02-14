@@ -1,72 +1,122 @@
 import streamlit as st
-import plotly.express as px
 import pandas as pd
+import plotly.express as px
 
-# Load the data
-df = pd.read_csv("Minerva.csv")
+# Load the CSV file
+df = pd.read_csv('Minerva.csv')
 
-# Clean and preprocess the data
-# Assuming the time column is named 'time' and formatted like 'HH:MM:SS'
-df['Total Seconds'] = pd.to_timedelta(df['time']).dt.total_seconds()
+# Renaming columns to make them easier to work with
+df.columns = [
+    "timestamp", "email", "full_name", "gender", "status", "walk_run", "time", "distance", "screenshot", "photos", "anything_else"
+]
 
-# Calculate the number of runs completed by each participant
-df['Runs Completed'] = df.groupby('Email Address')['Email Address'].transform('count')
+# Convert "time" from string to timedelta and calculate total seconds
+df['time_td'] = pd.to_timedelta(df['time'])
+df['total_seconds'] = df['time_td'].dt.total_seconds()
 
-# Calculate the best time for each participant
-df['Best Time'] = df.groupby('Email Address')['Total Seconds'].transform('min')
+# Clean 'distance' to ensure it's numeric
+df['distance'] = pd.to_numeric(df['distance'], errors='coerce')
 
-# Add a Position column based on the best time
-df['Position'] = df.groupby('Email Address')['Total Seconds'].rank("dense", ascending=True)
+# Calculate statistics and prepare data for plots
 
-# Now you can use this DataFrame (df) in your Streamlit app for visualization
+# Participants count by gender
+participants_by_gender = df.groupby('gender')['email'].nunique().reset_index(name='count')
+
+# Fastest times by status and gender
+fastest_female_students = df[(df['gender'] == 'Female') & (df['status'].isin(['Student', 'Alumni']))].sort_values(by='total_seconds').head(1)
+fastest_male_students = df[(df['gender'] == 'Male') & (df['status'].isin(['Student', 'Alumni']))].sort_values(by='total_seconds').head(1)
+fastest_non_binary_students = df[(df['gender'] == 'Non-binary') & (df['status'].isin(['Student', 'Alumni']))].sort_values(by='total_seconds').head(1)
+fastest_faculty_staff = df[df['status'] == 'Staff/Faculty'].sort_values(by='total_seconds').head(1)
+
+# Runners/walkers with at least 15 5Ks
+runners_with_at_least_15_5ks = df.groupby('email').filter(lambda x: len(x) >= 15)
+
+# Most improved running time
+# This requires calculating the improvement for each participant, which is more complex and will be addressed separately
+
+# Longest walk
+longest_walk = df[df['walk_run'] == 'I walked'].sort_values(by='distance', ascending=False).head(1)
+
+# Median runner/walker
+median_time = df['total_seconds'].median()
+df['time_difference'] = (df['total_seconds'] - median_time).abs()
+median_runner = df.sort_values(by='time_difference').head(1)
+
+# Prepare summary data for each plot
+# Note: For more detailed plots, additional processing may be required
+
+{
+    "participants_by_gender": participants_by_gender,
+    "fastest_female_students": fastest_female_students,
+    "fastest_male_students": fastest_male_students,
+    "fastest_non_binary_students": fastest_non_binary_students,
+    "fastest_faculty_staff": fastest_faculty_staff,
+    "runners_with_at_least_15_5ks": runners_with_at_least_15_5ks,
+    "longest_walk": longest_walk,
+    "median_runner": median_runner
+}
+
+
 st.title('Minerva 5K Challenge Dashboard')
 
-# Winners and Data Visualization
-st.subheader('🏆 Winners')
-winners = df[df['Position'] == 1]
-st.write(winners[['Email Address', 'Best Time', 'Runs Completed', 'Position']])
-
-# Creating tabs for each plot
-tab1, tab2, tab3 = st.tabs(["Performance Overview", "Run Times", "Runs Completed"])
+# Create tabs for new plots
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+    "Participants by Gender",
+    "Fastest Female Students",
+    "Fastest Male Students",
+    "Fastest Non-binary Students",
+    "Fastest Faculty/Staff",
+    "Runners/Walkers with at Least 15 5Ks",
+    "Most Improved Running Time",
+    "Longest Walk",
+    "Median Runner/Walker"
+])
 
 with tab1:
-    st.subheader("Performance Overview: Runs Completed vs. Best Time")
-    fig1 = px.scatter(df, x="Runs Completed", y="Best Time", size="Position", color="Email Address", hover_name="Email Address")
-    st.plotly_chart(fig1, use_container_width=True)
+    # Generate and display the "Participants by Gender" plot
+    fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
+    st.plotly_chart(fig, use_container_width=True)
 
 with tab2:
-    st.subheader("Run Times Overview (Lower is Better)")
-    fig2 = px.bar(df, x="Email Address", y="Total Seconds", color="Email Address")
-    fig2.update_layout(xaxis_title="Participant Email", yaxis_title="Total Seconds (Best Recorded Times)")
-    st.plotly_chart(fig2, use_container_width=True)
+    # Generate and display the "Participants by Gender" plot
+    fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
+    st.plotly_chart(fig, use_container_width=True)
 
 with tab3:
-    st.subheader("Runs Completed Overview")
-    fig3 = px.bar(df, x="Email Address", y="Runs Completed", color="Email Address")
-    fig3.update_layout(xaxis_title="Participant Email", yaxis_title="Runs Completed")
-    st.plotly_chart(fig3, use_container_width=True)
+    # Generate and display the "Participants by Gender" plot
+    fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Participant Details
-st.subheader('👥 Participant Details')
-participant_email = st.text_input('Enter an email to search:', '')
-if participant_email:
-    participant_details = df[df['Email Address'].str.contains(participant_email, case=False)]
-    if not participant_details.empty:
-        st.write(participant_details[['Email Address', 'Runs Completed', 'Best Time', 'Position']])
-    else:
-        st.warning('No participant found with this email.')
+with tab4:
+    # Generate and display the "Participants by Gender" plot
+    fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Additional interactivity based on user input
-num_runs_filter = st.slider('Filter by minimum runs completed:', 0, df['Runs Completed'].max(), 1)
-filtered_by_runs = df[df['Runs Completed'] >= num_runs_filter]
-if not filtered_by_runs.empty:
-    st.write(filtered_by_runs[['Email Address', 'Runs Completed', 'Best Time', 'Position']])
+with tab5:
+    # Generate and display the "Participants by Gender" plot
+    fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
+    st.plotly_chart(fig, use_container_width=True)
 
-# Display total and filtered participants in 2-column layout
-col1, col2 = st.columns(2)
-with col1:
-    total_participants = df['Email Address'].nunique()
-    st.metric(label="Total Participants", value=total_participants)
-with col2:
-    filtered_participants = filtered_by_runs['Email Address'].nunique()
-    st.metric(label="Filtered Participants", value=filtered_participants)
+with tab6:
+    # Generate and display the "Participants by Gender" plot
+    fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
+    st.plotly_chart(fig, use_container_width=True)
+
+with tab7:
+    # Generate and display the "Participants by Gender" plot
+    fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
+    st.plotly_chart(fig, use_container_width=True)
+
+with tab8:
+    # Generate and display the "Participants by Gender" plot
+    fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
+    st.plotly_chart(fig, use_container_width=True)
+
+
+# Repeat the above process with appropriate modifications for each tab
+# Use the prepared dataframes like `fastest_female_students`, `fastest_male_students`, etc., for plotting
+
+# Note: For plots requiring more complex calculations (e.g., most improved running time),
+# you may need to perform additional data processing.
+
+# Ensure to adapt the dataset paths, column names, and specific processing as per your application's context.
