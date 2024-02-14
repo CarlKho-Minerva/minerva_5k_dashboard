@@ -47,7 +47,7 @@ with col1:
     total_participants = len(df)
     st.metric(label="Total Participants", value=total_participants)
 with col2:
-    filtered_participants = len(df_filtered)
+    filtered_participants = len(filtered_by_runs)
     st.metric(label="Filtered Participants", value=filtered_participants)
 
 
