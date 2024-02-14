@@ -3,7 +3,7 @@ import plotly.express as px
 import pandas as pd
 
 # Load the data
-df = pd.read_csv("/Minerva.csv")
+df = pd.read_csv("Minerva.csv")
 
 # Clean and preprocess the data
 # Assuming the time column is named 'time' and formatted like 'HH:MM:SS'
