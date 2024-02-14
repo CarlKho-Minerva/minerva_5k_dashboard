@@ -13,22 +13,8 @@ df = pd.DataFrame([
     {"Name": "Casey Jordan", "Runs Completed": 2, "Best Time": "30:00", "Position": 5},
 ])
 
-# Dashboard Title
-st.title('Minerva 5K Challenge Dashboard')
-
-# Winners and Data Visualization
-st.subheader('🏆 Winner')
-winners = df[df['Position'] == 1]
-st.write(winners)
-
 # Convert "Best Time" to total seconds for easier plotting
 df['Total Seconds'] = pd.to_timedelta('00:' + df['Best Time']).dt.total_seconds()
-
-# Function to convert total seconds into MM:SS format
-def format_time(seconds):
-    minutes = int(seconds // 60)
-    seconds = int(seconds % 60)
-    return f'{minutes:02d}:{seconds:02d}'
 
 st.title('Minerva 5K Challenge Dashboard')
 
@@ -45,10 +31,8 @@ with tab2:
     st.subheader("Run Times Overview")
     fig2 = px.bar(df, x="Name", y="Total Seconds", color="Name", title="Run Times of Participants")
     # Customizing the axis labels for clarity
-    fig2.update_yaxes(tickvals=df['Total Seconds'], ticktext=df['Best Time'].apply(format_time))
-    fig2.update_layout(xaxis_title="Participant Name", yaxis_title="Best Time (MM:SS)")
+    fig2.update_layout(xaxis_title="Participant Name", yaxis_title="Total Seconds (Best Time)")
     st.plotly_chart(fig2, use_container_width=True)
-
 
 with tab3:
     st.subheader("Runs Completed Overview")
@@ -56,6 +40,8 @@ with tab3:
     # Customizing the axis labels for clarity
     fig3.update_layout(xaxis_title="Participant Name", yaxis_title="Runs Completed")
     st.plotly_chart(fig3, use_container_width=True)
+
+
 # Participant Details
 st.subheader('👥 Participant Details')
 participant_name = st.text_input('Enter a name to search:', '')
