@@ -71,6 +71,13 @@ for i, tab in enumerate(tabs):
             if not fastest_female_students.empty:
                 fig = px.bar(fastest_female_students, x='full_name', y='total_seconds', title="Fastest Female Students")
                 st.plotly_chart(fig, use_container_width=True)
+                st.subheader("Other Female Participants")
+                other_female = df[(df['gender'] == 'Female') & (df['status'].isin(['Student', 'Alumni'])) & (~df['full_name'].isin(fastest_female_students['full_name']))]
+                if not other_female.empty:
+                    fig_other_female = px.bar(other_female, x='full_name', y='total_seconds', title="Other Female Participants")
+                    st.plotly_chart(fig_other_female, use_container_width=True)
+                else:
+                    st.write("No other female participants.")
             else:
                 st.write("No data available.")
         elif i == 2:
@@ -79,6 +86,13 @@ for i, tab in enumerate(tabs):
             if not fastest_male_students.empty:
                 fig = px.bar(fastest_male_students, x='full_name', y='total_seconds', title="Fastest Male Students")
                 st.plotly_chart(fig, use_container_width=True)
+                st.subheader("Other Male Participants")
+                other_male = df[(df['gender'] == 'Male') & (df['status'].isin(['Student', 'Alumni'])) & (~df['full_name'].isin(fastest_male_students['full_name']))]
+                if not other_male.empty:
+                    fig_other_male = px.bar(other_male, x='full_name', y='total_seconds', title="Other Male Participants")
+                    st.plotly_chart(fig_other_male, use_container_width=True)
+                else:
+                    st.write("No other male participants.")
             else:
                 st.write("No data available.")
         elif i == 3:
@@ -87,6 +101,13 @@ for i, tab in enumerate(tabs):
             if not fastest_non_binary_students.empty:
                 fig = px.bar(fastest_non_binary_students, x='full_name', y='total_seconds', title="Fastest Non-binary Students")
                 st.plotly_chart(fig, use_container_width=True)
+                st.subheader("Other Non-binary Participants")
+                other_non_binary = df[(df['gender'] == 'Non-binary') & (df['status'].isin(['Student', 'Alumni'])) & (~df['full_name'].isin(fastest_non_binary_students['full_name']))]
+                if not other_non_binary.empty:
+                    fig_other_non_binary = px.bar(other_non_binary, x='full_name', y='total_seconds', title="Other Non-binary Participants")
+                    st.plotly_chart(fig_other_non_binary, use_container_width=True)
+                else:
+                    st.write("No other non-binary participants.")
             else:
                 st.write("No data available.")
         elif i == 4:
@@ -95,6 +116,13 @@ for i, tab in enumerate(tabs):
             if not fastest_faculty_staff.empty:
                 fig = px.bar(fastest_faculty_staff, x='full_name', y='total_seconds', title="Fastest Faculty/Staff")
                 st.plotly_chart(fig, use_container_width=True)
+                st.subheader("Other Faculty/Staff Participants")
+                other_faculty_staff = df[(df['status'] == 'Staff/Faculty') & (~df['full_name'].isin(fastest_faculty_staff['full_name']))]
+                if not other_faculty_staff.empty:
+                    fig_other_faculty_staff = px.bar(other_faculty_staff, x='full_name', y='total_seconds', title="Other Faculty/Staff Participants")
+                    st.plotly_chart(fig_other_faculty_staff, use_container_width=True)
+                else:
+                    st.write("No other faculty/staff participants.")
             else:
                 st.write("No data available.")
         elif i == 5:
