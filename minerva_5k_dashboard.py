@@ -21,6 +21,41 @@ st.subheader('🏆 Winner')
 winners = df[df['Position'] == 1]
 st.write(winners)
 
+# Convert "Best Time" from string to datetime.timedelta for sorting
+df['Best Time'] = pd.to_timedelta(df['Best Time'].apply(lambda x: f"0:{x}"))
+df.sort_values(by='Best Time', ascending=False, inplace=True)  # Sort for leaderboard view
+
+st.title('Minerva 5K Challenge Dashboard')
+
+# Tabs for different plots
+tab1, tab2, tab3 = st.tabs(["Run Times Leaderboard", "Runs Completed", "Performance Overview"])
+
+with tab1:
+    st.subheader('🏃 Run Times Leaderboard')
+    # Using bar chart to display run times
+    fig_run_times = px.bar(df, x='Name', y='Best Time', color='Name', title="Run Times Leaderboard")
+    fig_run_times.update_layout(xaxis_title="Participant", yaxis_title="Best Time", yaxis_tickformat='%H:%M:%S')
+    st.plotly_chart(fig_run_times, use_container_width=True)
+
+with tab2:
+    st.subheader('🔢 Runs Completed')
+    # Using bar chart to display runs completed
+    fig_runs_completed = px.bar(df, x='Name', y='Runs Completed', color='Name', title="Runs Completed")
+    fig_runs_completed.update_layout(xaxis_title="Participant", yaxis_title="Runs Completed")
+    st.plotly_chart(fig_runs_completed, use_container_width=True)
+
+with tab3:
+    st.subheader('📊 Performance Overview')
+    # Scatter plot (existing)
+    df['Best Time Seconds'] = df['Best Time'].dt.total_seconds()  # Convert timedelta to seconds for plotting
+    fig_scatter = px.scatter(df, x="Runs Completed", y="Best Time Seconds", size="Position", color="Name", hover_name="Name",
+                             title="Performance Overview: Runs Completed vs. Best Time")
+    fig_scatter.update_layout(xaxis_title="Runs Completed", yaxis_title="Best Time (Seconds)", yaxis_tickformat='%H:%M:%S')
+    st.plotly_chart(fig_scatter, use_container_width=True)
+
+# Reset 'Best Time' to original string format for display purposes
+df['Best Time'] = df['Best Time'].dt.components.apply(lambda x: f"{x.minutes:02d}:{x.seconds:02d}", axis=1)
+
 fig = px.scatter(df, x="Runs Completed", y="Best Time", size="Position", color="Name", 
                  hover_name="Name", title="Runs Completed vs. Best Time")
 st.plotly_chart(fig, use_container_width=True)
