@@ -23,39 +23,33 @@ st.write(winners)
 
 st.title('Minerva 5K Challenge Dashboard')
 
-# Tabs for different plots
-tab1, tab2, tab3 = st.tabs(["Run Times Leaderboard", "Runs Completed", "Performance Overview"])
+# Convert "Best Time" to total seconds for easier plotting
+df['Total Seconds'] = pd.to_timedelta('00:' + df['Best Time']).dt.total_seconds()
+
+st.title('Minerva 5K Challenge Dashboard')
+
+# Creating tabs for each plot
+tab1, tab2, tab3 = st.tabs(["Performance Overview", "Run Times", "Runs Completed"])
 
 with tab1:
-    st.subheader('🏃 Run Times Leaderboard (lower is better)')
-    # Using bar chart to display run times
-    fig_run_times = px.bar(df, x='Name', y='Best Time', color='Name', title="Run Times Leaderboard")
-    fig_run_times.update_layout(xaxis_title="Participant", yaxis_title="Best Time", yaxis_tickformat='%H:%M:%S')
-    st.plotly_chart(fig_run_times, use_container_width=True)
+    st.subheader("Performance Overview: Runs Completed vs. Best Time")
+    fig1 = px.scatter(df, x="Runs Completed", y="Best Time", size="Position", color="Name", hover_name="Name",
+                      title="Performance Overview: Runs Completed vs. Best Time")
+    st.plotly_chart(fig1, use_container_width=True)
 
 with tab2:
-    st.subheader('🔢 Runs Completed')
-    # Using bar chart to display runs completed
-    fig_runs_completed = px.bar(df, x='Name', y='Runs Completed', color='Name', title="Runs Completed")
-    fig_runs_completed.update_layout(xaxis_title="Participant", yaxis_title="Runs Completed")
-    st.plotly_chart(fig_runs_completed, use_container_width=True)
+    st.subheader("Run Times Overview")
+    fig2 = px.bar(df, x="Name", y="Total Seconds", color="Name", title="Run Times of Participants")
+    # Customizing the axis labels for clarity
+    fig2.update_layout(xaxis_title="Participant Name", yaxis_title="Total Seconds (Best Time)")
+    st.plotly_chart(fig2, use_container_width=True)
 
 with tab3:
-    st.subheader('📊 Performance Overview')
-    # Scatter plot (existing)
-    df['Best Time Seconds'] = df['Best Time'].dt.total_seconds()  # Convert timedelta to seconds for plotting
-    fig_scatter = px.scatter(df, x="Runs Completed", y="Best Time Seconds", size="Position", color="Name", hover_name="Name",
-                             title="Performance Overview: Runs Completed vs. Best Time")
-    fig_scatter.update_layout(xaxis_title="Runs Completed", yaxis_title="Best Time (Seconds)", yaxis_tickformat='%H:%M:%S')
-    st.plotly_chart(fig_scatter, use_container_width=True)
-
-# Reset 'Best Time' to original string format for display purposes
-df['Best Time'] = df['Best Time'].dt.components.apply(lambda x: f"{x.minutes:02d}:{x.seconds:02d}", axis=1)
-
-fig = px.scatter(df, x="Runs Completed", y="Best Time", size="Position", color="Name", 
-                 hover_name="Name", title="Runs Completed vs. Best Time")
-st.plotly_chart(fig, use_container_width=True)
-
+    st.subheader("Runs Completed Overview")
+    fig3 = px.bar(df, x="Name", y="Runs Completed", color="Name", title="Runs Completed by Participants")
+    # Customizing the axis labels for clarity
+    fig3.update_layout(xaxis_title="Participant Name", yaxis_title="Runs Completed")
+    st.plotly_chart(fig3, use_container_width=True)
 # Participant Details
 st.subheader('👥 Participant Details')
 participant_name = st.text_input('Enter a name to search:', '')
