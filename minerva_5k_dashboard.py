@@ -31,7 +31,7 @@ with tab2:
     st.subheader("Run Times Overview")
     fig2 = px.bar(df, x="Name", y="Total Seconds", color="Name", title="Run Times of Participants")
     # Customizing the axis labels for clarity
-    fig2.update_layout(xaxis_title="Participant Name", yaxis_title="Total Seconds (Best Time)")
+    fig2.update_layout(xaxis_title="Participant Name", yaxis_title="Total Seconds (Lower is Better)")
     st.plotly_chart(fig2, use_container_width=True)
 
 with tab3:
