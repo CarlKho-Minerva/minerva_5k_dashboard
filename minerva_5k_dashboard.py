@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 # Load the CSV file
-df = pd.read_csv('https://docs.google.com/spreadsheets/d/e/2pacx-1vsp4c-pjb0c- mj4hstt1svxc4adqeefftrzht4ojnrtfrInvppqa_k8jgrcvevo~ 66rer2mOvwrmsym/pub? gid=1231808415&single=true&output=csv')
+df = pd.read_csv('https://docs.google.com/spreadsheets/d/e/2pacx-1vsp4c-pjb0c-mj4hstt1svxc4adqeefftrzht4ojnrtfrInvppaa_k8jgrcvevo-66rer2mOvwrmsym/pub?gid=1231808415&single=true&output=csv')
 
 # Renaming columns to make them easier to work with
 df.columns = [
