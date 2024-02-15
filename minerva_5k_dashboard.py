@@ -86,28 +86,28 @@ for i, tab in enumerate(fastest_participants_tabs):
         if i == 0:
             # "Fastest Female Students" plot
             if not fastest_female_students.empty:
-                fig = px.bar(fastest_female_students, x='shortened_name', y='total_seconds', title="Fastest Female Students")
+                fig = px.bar(fastest_female_students, x='shortened_name', y='formatted_pace', title="Fastest Female Students")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest female students.")
         elif i == 1:
             # "Fastest Male Students" plot
             if not fastest_male_students.empty:
-                fig = px.bar(fastest_male_students, x='shortened_name', y='total_seconds', title="Fastest Male Students")
+                fig = px.bar(fastest_male_students, x='shortened_name', y='formatted_pace', title="Fastest Male Students")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest male students.")
         elif i == 2:
             # "Fastest Non-binary Students" plot
             if not fastest_non_binary_students.empty:
-                fig = px.bar(fastest_non_binary_students, x='shortened_name', y='total_seconds', title="Fastest Non-binary Students")
+                fig = px.bar(fastest_non_binary_students, x='shortened_name', y='formatted_pace', title="Fastest Non-binary Students")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest non-binary students.")
         elif i == 3:
             # "Fastest Faculty/Staff" plot
             if not fastest_faculty_staff.empty:
-                fig = px.bar(fastest_faculty_staff, x='shortened_name', y='total_seconds', title="Fastest Faculty/Staff")
+                fig = px.bar(fastest_faculty_staff, x='shortened_name', y='formatted_pace', title="Fastest Faculty/Staff")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest faculty/staff.")
