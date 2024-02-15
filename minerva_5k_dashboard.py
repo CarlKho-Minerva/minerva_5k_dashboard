@@ -10,19 +10,18 @@ df.columns = [
     "timestamp", "email", "full_name", "gender", "status", "walk_run", "time", "distance", "screenshot", "photos", "anything_else"
 ]
 
-# Anonymize full names and remove emails
-df['full_name'] = df['full_name'].str.split().apply(lambda x: x[0] + ' ' + x[-1][0] if x else '')
-df.drop(columns=['email'], inplace=True)
+# Anonymize full names
+df['anonymized_name'] = df['full_name'].str.split().apply(lambda x: x[0] + ' ' + x[-1][0] if len(x) > 1 else x[0])
 
 # Convert "time" from string to timedelta and calculate total seconds
 df['time_td'] = pd.to_timedelta(df['time'])
 df['total_seconds'] = df['time_td'].dt.total_seconds()
 
-# Clean 'distance' to ensure it's numeric
+# Clean 'distance' to ensure it's numeric and calculate pace
 df['distance'] = pd.to_numeric(df['distance'], errors='coerce')
 df['pace_per_mile'] = df['total_seconds'] / df['distance']
 
-# Unique Participants
+# Unique Participants using email for internal counting
 unique_participants = df['email'].nunique()
 
 # Participants by Gender
@@ -63,7 +62,7 @@ st.title('Minerva 5K Challenge Dashboard')
 # Display the overall winner based on pace per mile
 st.subheader('🏆 Overall Winner')
 overall_winner = df.sort_values(by='pace_per_mile').head(1)
-st.write(overall_winner[['full_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
+st.write(overall_winner[['anonymized_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
 
 
 
@@ -156,12 +155,12 @@ for i, tab in enumerate(other_metrics_tabs):
 st.subheader('🔍 Search Participant Details')
 participant_name = st.text_input('Enter a name to search:')
 if participant_name:
-    participant_details = df[df['full_name'].str.contains(participant_name, case=False, na=False)]
+    participant_details = df[df['anonymized_name'].str.contains(participant_name, case=False, na=False)]
     if not participant_details.empty:
-        st.write(participant_details[['full_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
+        st.write(participant_details[['anonymized_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
     else:
         st.warning('No participant found with this name.')
 
-# Display table of all participants
+# Display table of all participants without email
 st.subheader('👥 All Participants')
-st.write(df[['full_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
+st.write(df[['anonymized_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
