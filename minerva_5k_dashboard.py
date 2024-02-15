@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 # Load the CSV file
-df = pd.read_csv('Minerva.csv')
+df = pd.read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSp4C-PJb0C-mJ4HstT1Svxc4aDQeEffTRzh[…]Evo-66ReR2M0VwRmSYM/pub?gid=1231808415&single=true&output=csv')
 
 # Renaming columns to make them easier to work with
 df.columns = [
