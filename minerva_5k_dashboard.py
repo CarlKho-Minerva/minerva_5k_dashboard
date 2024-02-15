@@ -7,7 +7,7 @@ df = pd.read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSp4C-PJb0C-mJ
 
 # Renaming columns to make them easier to work with
 df.columns = [
-    "timestamp", "email", "full_name", "gender", "status", "walk_run", "time", "distance", "screenshot", "photos", "anything_else"
+    "timestamp", "full_name", "gender", "status", "walk_run", "time", "distance", "screenshot", "photos", "anything_else"
 ]
 
 # Convert "time" from string to timedelta and calculate total seconds
