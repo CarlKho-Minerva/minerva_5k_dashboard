@@ -1,8 +1,8 @@
 # Minerva 5K Challenge Dashboard
 
-This project is a web-based dashboard for visualizing the results of the Minerva 5K Challenge. It includes data on participants' run completions, their best times, and positions. The dashboard is designed for faculty members who need quick and easy access to race statistics.
+This project is a web-based dashboard for visualizing the results of the Minerva 5K Challenge. It includes data on participants' run completions, their best times, and positions. The dashboard is designed for faculty members who need quick and easy access to race statistics. I worked with Professor Aboozar Hadavand.
 
-![image](https://github.com/CarlKho-Minerva/minerva_5k_dashboard/assets/106736711/e1bf707c-8662-45d7-b1c9-1d2b5bd8c5e8)
+![image](https://github.com/CarlKho-Minerva/minerva_5k_dashboard/assets/106736711/2b394d7c-7da7-4946-8592-96fb7e143883)
 
 
 ## Features
