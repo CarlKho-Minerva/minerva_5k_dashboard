@@ -11,7 +11,7 @@ df.columns = [
 ]
 
 # Anonymize full names
-df['anonymized_name'] = df['full_name'].str.split().apply(lambda x: x[0] + ' ' + x[-1][0] if len(x) > 1 else x[0])
+df['shortened_name'] = df['full_name'].str.split().apply(lambda x: x[0] + ' ' + x[-1][0] if len(x) > 1 else x[0])
 
 # Convert "time" from string to timedelta and calculate total seconds
 df['time_td'] = pd.to_timedelta(df['time'])
@@ -62,7 +62,7 @@ st.title('Minerva 5K Challenge Dashboard')
 # Display the overall winner based on pace per mile
 st.subheader('🏆 Overall Winner')
 overall_winner = df.sort_values(by='pace_per_mile').head(1)
-st.write(overall_winner[['anonymized_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
+st.write(overall_winner[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
 
 
 
@@ -80,28 +80,28 @@ for i, tab in enumerate(fastest_participants_tabs):
         if i == 0:
             # "Fastest Female Students" plot
             if not fastest_female_students.empty:
-                fig = px.bar(fastest_female_students, x='full_name', y='total_seconds', title="Fastest Female Students")
+                fig = px.bar(fastest_female_students, x='shortened_name', y='total_seconds', title="Fastest Female Students")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest female students.")
         elif i == 1:
             # "Fastest Male Students" plot
             if not fastest_male_students.empty:
-                fig = px.bar(fastest_male_students, x='full_name', y='total_seconds', title="Fastest Male Students")
+                fig = px.bar(fastest_male_students, x='shortened_name', y='total_seconds', title="Fastest Male Students")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest male students.")
         elif i == 2:
             # "Fastest Non-binary Students" plot
             if not fastest_non_binary_students.empty:
-                fig = px.bar(fastest_non_binary_students, x='full_name', y='total_seconds', title="Fastest Non-binary Students")
+                fig = px.bar(fastest_non_binary_students, x='shortened_name', y='total_seconds', title="Fastest Non-binary Students")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest non-binary students.")
         elif i == 3:
             # "Fastest Faculty/Staff" plot
             if not fastest_faculty_staff.empty:
-                fig = px.bar(fastest_faculty_staff, x='full_name', y='total_seconds', title="Fastest Faculty/Staff")
+                fig = px.bar(fastest_faculty_staff, x='shortened_name', y='total_seconds', title="Fastest Faculty/Staff")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest faculty/staff.")
@@ -139,14 +139,14 @@ for i, tab in enumerate(other_metrics_tabs):
         elif i == 3:
             # "Longest Walk" plot
             if not longest_walk.empty:
-                fig = px.bar(longest_walk, x='full_name', y='distance', title="Longest Walk")
+                fig = px.bar(longest_walk, x='shortened_name', y='distance', title="Longest Walk")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for the longest walk.")
         elif i == 4:
             # "Median Runner/Walker" plot
             if not median_runner.empty:
-                fig = px.bar(median_runner, x='full_name', y='total_seconds', title="Median Runner/Walker")
+                fig = px.bar(median_runner, x='shortened_name', y='total_seconds', title="Median Runner/Walker")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No median runner/walker data available.")
@@ -155,12 +155,12 @@ for i, tab in enumerate(other_metrics_tabs):
 st.subheader('🔍 Search Participant Details')
 participant_name = st.text_input('Enter a name to search:')
 if participant_name:
-    participant_details = df[df['anonymized_name'].str.contains(participant_name, case=False, na=False)]
+    participant_details = df[df['shortened_name'].str.contains(participant_name, case=False, na=False)]
     if not participant_details.empty:
-        st.write(participant_details[['anonymized_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
+        st.write(participant_details[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
     else:
         st.warning('No participant found with this name.')
 
 # Display table of all participants without email
 st.subheader('👥 All Participants')
-st.write(df[['anonymized_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
+st.write(df[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
