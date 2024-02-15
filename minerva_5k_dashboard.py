@@ -9,7 +9,6 @@ df = pd.read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSp4C-PJb0C-mJ
 df.columns = [
     "timestamp", "email", "full_name", "gender", "status", "walk_run", "time", "distance", "screenshot", "photos", "anything_else"
 ]
-
 # Anonymize full names
 df['shortened_name'] = df['full_name'].str.split().apply(lambda x: x[0] + ' ' + x[-1][0] if len(x) > 1 else x[0])
 
@@ -20,6 +19,7 @@ df['total_seconds'] = df['time_td'].dt.total_seconds()
 # Clean 'distance' to ensure it's numeric and calculate pace
 df['distance'] = pd.to_numeric(df['distance'], errors='coerce')
 df['pace_per_mile'] = df['total_seconds'] / df['distance']
+df['formatted_pace'] = df['pace_per_mile'].apply(format_pace)
 
 # Unique Participants using email for internal counting
 unique_participants = df['email'].nunique()
@@ -61,7 +61,6 @@ st.title('Minerva 5K Challenge Dashboard')
 
 # Display the overall winner
 st.subheader('🏆 Overall Winner')
-df['formatted_pace'] = df['pace_per_mile'].apply(lambda x: f"{int(x // 60)}:{int(x % 60):02d} min/mile")
 overall_winner = df.sort_values(by='pace_per_mile').head(1)
 st.write(overall_winner[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
 
@@ -158,10 +157,10 @@ participant_name = st.text_input('Enter a name to search:')
 if participant_name:
     participant_details = df[df['shortened_name'].str.contains(participant_name, case=False, na=False)]
     if not participant_details.empty:
-        st.write(participant_details[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
+        st.write(participant_details[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
     else:
         st.warning('No participant found with this name.')
 
 # Display table of all participants without email
 st.subheader('👥 All Participants')
-st.write(df[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
+st.write(df[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
