@@ -55,6 +55,12 @@ median_runner = df.sort_values(by='median_diff').head(1)
 # Title for the dashboard
 st.title('Minerva 5K Challenge Dashboard')
 
+# Display the overall winner
+st.subheader('🏆 Overall Winner')
+overall_winner = df.sort_values(by='total_seconds').head(1)
+st.write(overall_winner)
+
+
 # First set of tabs for fastest participants
 fastest_participants_tabs = st.tabs([
     "Fastest Female Students",
@@ -139,3 +145,17 @@ for i, tab in enumerate(other_metrics_tabs):
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No median runner/walker data available.")
+
+# Participant Details with search functionality at the bottom
+st.subheader('🔍 Search Participant Details')
+participant_name = st.text_input('Enter a name to search:')
+if participant_name:
+    participant_details = df[df['full_name'].str.contains(participant_name, case=False, na=False)]
+    if not participant_details.empty:
+        st.write(participant_details)
+    else:
+        st.warning('No participant found with this name.')
+
+# Display table of all participants
+st.subheader('👥 All Participants')
+st.write(df)
