@@ -152,7 +152,7 @@ for i, tab in enumerate(other_metrics_tabs):
         elif i == 4:
             # "Median Runner/Walker" plot
             if not median_runner.empty:
-                fig = px.bar(median_runner, x='shortened_name', y='total_seconds', title="Median Runner/Walker")
+                fig = px.bar(median_runner, x='shortened_name', y='formatted_pace', title="Median Runner/Walker")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No median runner/walker data available.")
