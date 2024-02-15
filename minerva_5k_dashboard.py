@@ -55,94 +55,85 @@ median_runner = df.sort_values(by='median_diff').head(1)
 # Title for the dashboard
 st.title('Minerva 5K Challenge Dashboard')
 
-# Create tabs for new plots
-tabs = st.tabs([
-    "Participants by Gender",
+# First set of tabs for fastest participants
+fastest_participants_tabs = st.tabs([
     "Fastest Female Students",
     "Fastest Male Students",
     "Fastest Non-binary Students",
     "Fastest Faculty/Staff",
-    "Runners/Walkers with at Least 15 5Ks",
-    "Most Improved Running Time",
-    "Longest Walk",
-    "Median Runner/Walker"
 ])
 
-# Create content for each tab
-for i, tab in enumerate(tabs):
+# Content for the first set of tabs
+for i, tab in enumerate(fastest_participants_tabs):
     with tab:
         if i == 0:
-            # "Participants by Gender" plot
-            fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
-            st.plotly_chart(fig, use_container_width=True)
-
-        elif i == 1:
             # "Fastest Female Students" plot
-            st.subheader("Fastest Female Students")
             if not fastest_female_students.empty:
                 fig = px.bar(fastest_female_students, x='full_name', y='total_seconds', title="Fastest Female Students")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest female students.")
-
-        elif i == 2:
+        elif i == 1:
             # "Fastest Male Students" plot
-            st.subheader("Fastest Male Students")
             if not fastest_male_students.empty:
                 fig = px.bar(fastest_male_students, x='full_name', y='total_seconds', title="Fastest Male Students")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest male students.")
-
-        elif i == 3:
+        elif i == 2:
             # "Fastest Non-binary Students" plot
-            st.subheader("Fastest Non-binary Students")
             if not fastest_non_binary_students.empty:
                 fig = px.bar(fastest_non_binary_students, x='full_name', y='total_seconds', title="Fastest Non-binary Students")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest non-binary students.")
-
-        elif i == 4:
+        elif i == 3:
             # "Fastest Faculty/Staff" plot
-            st.subheader("Fastest Faculty/Staff")
             if not fastest_faculty_staff.empty:
                 fig = px.bar(fastest_faculty_staff, x='full_name', y='total_seconds', title="Fastest Faculty/Staff")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for fastest faculty/staff.")
 
-        elif i == 5:
+# Second set of tabs for other metrics
+other_metrics_tabs = st.tabs([
+    "Participants by Gender",
+    "Runners/Walkers with at Least 15 5Ks",
+    "Most Improved Running Time",
+    "Longest Walk",
+    "Median Runner/Walker"
+])
+
+# Content for the second set of tabs
+for i, tab in enumerate(other_metrics_tabs):
+    with tab:
+        if i == 0:
+            # "Participants by Gender" plot
+            fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
+            st.plotly_chart(fig, use_container_width=True)
+        elif i == 1:
             # "Runners/Walkers with at Least 15 5Ks" plot
-            st.subheader("Runners/Walkers with at Least 15 5Ks")
             if not runners_with_at_least_15_5ks.empty:
-                # Assuming you have a column 'total_5ks' showing the count for each user
-                fig = px.bar(runners_with_at_least_15_5ks, x='email', y='n', title="Runners/Walkers with at Least 15 5Ks")
+                fig = px.histogram(runners_with_at_least_15_5ks, x='email', title="Runners/Walkers with at Least 15 5Ks")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No runners/walkers with at least 15 5Ks.")
-
-        elif i == 6:
+        elif i == 2:
             # "Most Improved Running Time" plot
-            st.subheader("Most Improved Running Time")
             if not improvement_df.empty:
                 fig_improvement = px.bar(improvement_df.reset_index(), x='email', y='improvement', title="Most Improved Running Time")
                 st.plotly_chart(fig_improvement, use_container_width=True)
             else:
                 st.write("No data available for improvement.")
-
-        elif i == 7:
+        elif i == 3:
             # "Longest Walk" plot
-            st.subheader("Longest Walk")
             if not longest_walk.empty:
                 fig = px.bar(longest_walk, x='full_name', y='distance', title="Longest Walk")
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.write("No data available for the longest walk.")
-
-        elif i == 8:
+        elif i == 4:
             # "Median Runner/Walker" plot
-            st.subheader("Median Runner/Walker")
             if not median_runner.empty:
                 fig = px.bar(median_runner, x='full_name', y='total_seconds', title="Median Runner/Walker")
                 st.plotly_chart(fig, use_container_width=True)
