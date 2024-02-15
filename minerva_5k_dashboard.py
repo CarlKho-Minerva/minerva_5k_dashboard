@@ -2,6 +2,12 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+# Function to format the pace per mile
+def format_pace(seconds):
+    minutes = int(seconds // 60)
+    seconds = int(seconds % 60)
+    return f"{minutes}:{seconds:02d} min/mile"
+
 # Load the CSV file
 df = pd.read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSp4C-PJb0C-mJ4HstT1Svxc4aDQeEffTRzht4OJNRTfrLnVppqA_K8jGrcvEvo-66ReR2M0VwRmSYM/pub?gid=1231808415&single=true&output=csv')
 
