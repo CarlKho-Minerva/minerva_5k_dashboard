@@ -59,10 +59,11 @@ median_runner = df.sort_values(by='median_diff').head(1)
 # Title for the dashboard
 st.title('Minerva 5K Challenge Dashboard')
 
-# Display the overall winner based on pace per mile
+# Display the overall winner
 st.subheader('🏆 Overall Winner')
+df['formatted_pace'] = df['pace_per_mile'].apply(lambda x: f"{int(x // 60)}:{int(x % 60):02d} min/mile")
 overall_winner = df.sort_values(by='pace_per_mile').head(1)
-st.write(overall_winner[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'pace_per_mile']])
+st.write(overall_winner[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
 
 
 
