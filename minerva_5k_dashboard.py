@@ -2,9 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-from preprocessing import preprocess
-
-
 # Function to format the pace per mile
 def format_pace(seconds):
     minutes = int(seconds // 60)
