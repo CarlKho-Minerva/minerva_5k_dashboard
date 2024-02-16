@@ -52,16 +52,6 @@ runners_with_at_least_15_5ks = df.groupby('email').filter(lambda x: len(x) >= 15
 improvement_df = df[df['walk_run'] == 'I ran'].groupby('email').agg(max_pace=('total_seconds', 'max'), min_pace=('total_seconds', 'min'))
 improvement_df['improvement'] = improvement_df['max_pace'] - improvement_df['min_pace']
 improvement_df = improvement_df.sort_values(by='improvement', ascending=False)
-# Most Improved Running Time
-st.subheader("Most Improved Running Time")
-# Filter out entries with no improvement
-improvement_df_filtered = improvement_df[improvement_df['improvement'] > 0]
-if not improvement_df_filtered.empty:
-    fig_improvement = px.bar(improvement_df_filtered.reset_index(), x='email', y='improvement', title="Most Improved Running Time")
-    st.plotly_chart(fig_improvement, use_container_width=True)
-else:
-    st.write("No data available for improvement.")
-
 
 # Longest Walk
 longest_walk = df[df['walk_run'] == 'I walked'].sort_values(by='distance', ascending=False).head(1)
@@ -80,6 +70,19 @@ st.subheader('🏆 Overall Winner')
 overall_winner = df.sort_values(by='pace_per_mile').head(1)
 st.write(overall_winner[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
 
+# Participant Details with search functionality at the bottom
+st.subheader('🔍 Search Participant Details')
+participant_name = st.text_input('Enter a name to search:')
+if participant_name:
+    participant_details = df[df['shortened_name'].str.contains(participant_name, case=False, na=False)]
+    if not participant_details.empty:
+        st.write(participant_details[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
+    else:
+        st.warning('No participant found with this name.')
+
+# Display table of all participants without email
+st.subheader('👥 All Participants')
+st.write(df[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
 
 # Fastest Female Students
 st.subheader("Fastest Female Students")
@@ -128,8 +131,10 @@ else:
 
 # Most Improved Running Time
 st.subheader("Most Improved Running Time")
-if not improvement_df.empty:
-    fig_improvement = px.bar(improvement_df.reset_index(), x='email', y='improvement', title="Most Improved Running Time")
+# Filter out entries with no improvement
+improvement_df_filtered = improvement_df[improvement_df['improvement'] > 0]
+if not improvement_df_filtered.empty:
+    fig_improvement = px.bar(improvement_df_filtered.reset_index(), x='email', y='improvement', title="Most Improved Running Time")
     st.plotly_chart(fig_improvement, use_container_width=True)
 else:
     st.write("No data available for improvement.")
@@ -150,16 +155,3 @@ if not median_runner.empty:
 else:
     st.write("No median runner/walker data available.")
 
-# Participant Details with search functionality at the bottom
-st.subheader('🔍 Search Participant Details')
-participant_name = st.text_input('Enter a name to search:')
-if participant_name:
-    participant_details = df[df['shortened_name'].str.contains(participant_name, case=False, na=False)]
-    if not participant_details.empty:
-        st.write(participant_details[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
-    else:
-        st.warning('No participant found with this name.')
-
-# Display table of all participants without email
-st.subheader('👥 All Participants')
-st.write(df[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
