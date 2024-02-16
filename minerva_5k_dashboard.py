@@ -52,6 +52,16 @@ runners_with_at_least_15_5ks = df.groupby('email').filter(lambda x: len(x) >= 15
 improvement_df = df[df['walk_run'] == 'I ran'].groupby('email').agg(max_pace=('total_seconds', 'max'), min_pace=('total_seconds', 'min'))
 improvement_df['improvement'] = improvement_df['max_pace'] - improvement_df['min_pace']
 improvement_df = improvement_df.sort_values(by='improvement', ascending=False)
+# Most Improved Running Time
+st.subheader("Most Improved Running Time")
+# Filter out entries with no improvement
+improvement_df_filtered = improvement_df[improvement_df['improvement'] > 0]
+if not improvement_df_filtered.empty:
+    fig_improvement = px.bar(improvement_df_filtered.reset_index(), x='email', y='improvement', title="Most Improved Running Time")
+    st.plotly_chart(fig_improvement, use_container_width=True)
+else:
+    st.write("No data available for improvement.")
+
 
 # Longest Walk
 longest_walk = df[df['walk_run'] == 'I walked'].sort_values(by='distance', ascending=False).head(1)
@@ -80,82 +90,74 @@ fastest_participants_tabs = st.tabs([
     "Fastest Faculty/Staff",
 ])
 
-# Content for the first set of tabs
-for i, tab in enumerate(fastest_participants_tabs):
-    with tab:
-        if i == 0:
-            # "Fastest Female Students" plot
-            if not fastest_female_students.empty:
-                fig = px.bar(fastest_female_students, x='shortened_name', y='formatted_pace', title="Fastest Female Students")
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.write("No data available for fastest female students.")
-        elif i == 1:
-            # "Fastest Male Students" plot
-            if not fastest_male_students.empty:
-                fig = px.bar(fastest_male_students, x='shortened_name', y='formatted_pace', title="Fastest Male Students")
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.write("No data available for fastest male students.")
-        elif i == 2:
-            # "Fastest Non-binary Students" plot
-            if not fastest_non_binary_students.empty:
-                fig = px.bar(fastest_non_binary_students, x='shortened_name', y='formatted_pace', title="Fastest Non-binary Students")
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.write("No data available for fastest non-binary students.")
-        elif i == 3:
-            # "Fastest Faculty/Staff" plot
-            if not fastest_faculty_staff.empty:
-                fig = px.bar(fastest_faculty_staff, x='shortened_name', y='formatted_pace', title="Fastest Faculty/Staff")
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.write("No data available for fastest faculty/staff.")
+# Fastest Female Students
+st.subheader("Fastest Female Students")
+if not fastest_female_students.empty:
+    fig = px.bar(fastest_female_students, x='shortened_name', y='formatted_pace', title="Fastest Female Students")
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.write("No data available for fastest female students.")
 
-# Second set of tabs for other metrics
-other_metrics_tabs = st.tabs([
-    "Participants by Gender",
-    "Runners/Walkers with at Least 15 5Ks",
-    "Most Improved Running Time",
-    "Longest Walk",
-    "Median Runner/Walker"
-])
+# Fastest Male Students
+st.subheader("Fastest Male Students")
+if not fastest_male_students.empty:
+    fig = px.bar(fastest_male_students, x='shortened_name', y='formatted_pace', title="Fastest Male Students")
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.write("No data available for fastest male students.")
 
-# Content for the second set of tabs
-for i, tab in enumerate(other_metrics_tabs):
-    with tab:
-        if i == 0:
-            # "Participants by Gender" plot
-            fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
-            st.plotly_chart(fig, use_container_width=True)
-        elif i == 1:
-            # "Runners/Walkers with at Least 15 5Ks" plot
-            if not runners_with_at_least_15_5ks.empty:
-                fig = px.histogram(runners_with_at_least_15_5ks, x='email', title="Runners/Walkers with at Least 15 5Ks")
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.write("No runners/walkers with at least 15 5Ks.")
-        elif i == 2:
-            # "Most Improved Running Time" plot
-            if not improvement_df.empty:
-                fig_improvement = px.bar(improvement_df.reset_index(), x='email', y='improvement', title="Most Improved Running Time")
-                st.plotly_chart(fig_improvement, use_container_width=True)
-            else:
-                st.write("No data available for improvement.")
-        elif i == 3:
-            # "Longest Walk" plot
-            if not longest_walk.empty:
-                fig = px.bar(longest_walk, x='shortened_name', y='distance', title="Longest Walk")
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.write("No data available for the longest walk.")
-        elif i == 4:
-            # "Median Runner/Walker" plot
-            if not median_runner.empty:
-                fig = px.bar(median_runner, x='shortened_name', y='formatted_pace', title="Median Runner/Walker")
-                st.plotly_chart(fig, use_container_width=True)
-            else:
-                st.write("No median runner/walker data available.")
+# Fastest Non-binary Students
+st.subheader("Fastest Non-binary Students")
+if not fastest_non_binary_students.empty:
+    fig = px.bar(fastest_non_binary_students, x='shortened_name', y='formatted_pace', title="Fastest Non-binary Students")
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.write("No data available for fastest non-binary students.")
+
+# Fastest Faculty/Staff
+st.subheader("Fastest Faculty/Staff")
+if not fastest_faculty_staff.empty:
+    fig = px.bar(fastest_faculty_staff, x='shortened_name', y='formatted_pace', title="Fastest Faculty/Staff")
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.write("No data available for fastest faculty/staff.")
+
+# Participants by Gender
+st.subheader("Participants by Gender")
+fig = px.bar(participants_by_gender, x='gender', y='count', title="Participants by Gender")
+st.plotly_chart(fig, use_container_width=True)
+
+# Runners/Walkers with at Least 15 5Ks
+st.subheader("Runners/Walkers with at Least 15 5Ks")
+if not runners_with_at_least_15_5ks.empty:
+    fig = px.histogram(runners_with_at_least_15_5ks, x='email', title="Runners/Walkers with at Least 15 5Ks")
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.write("No runners/walkers with at least 15 5Ks.")
+
+# Most Improved Running Time
+st.subheader("Most Improved Running Time")
+if not improvement_df.empty:
+    fig_improvement = px.bar(improvement_df.reset_index(), x='email', y='improvement', title="Most Improved Running Time")
+    st.plotly_chart(fig_improvement, use_container_width=True)
+else:
+    st.write("No data available for improvement.")
+
+# Longest Walk
+st.subheader("Longest Walk")
+if not longest_walk.empty:
+    fig = px.bar(longest_walk, x='shortened_name', y='distance', title="Longest Walk")
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.write("No data available for the longest walk.")
+
+# Median Runner/Walker
+st.subheader("Median Runner/Walker")
+if not median_runner.empty:
+    fig = px.bar(median_runner, x='shortened_name', y='formatted_pace', title="Median Runner/Walker")
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.write("No median runner/walker data available.")
 
 # Participant Details with search functionality at the bottom
 st.subheader('🔍 Search Participant Details')
