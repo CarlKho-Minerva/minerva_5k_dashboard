@@ -80,9 +80,12 @@ if participant_name:
     else:
         st.warning('No participant found with this name.')
 
-# Display table of all participants without email
+# Display table of all participants without email, index starting from 1
 st.subheader('👥 All Participants')
-st.write(df[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
+# Adjust the DataFrame index to start from 1
+df_adjusted_index = df.reset_index(drop=True)
+df_adjusted_index.index = df_adjusted_index.index + 1
+st.write(df_adjusted_index[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
 
 # Fastest Female Students
 st.subheader("Fastest Female Students")
