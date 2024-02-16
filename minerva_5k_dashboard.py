@@ -81,15 +81,6 @@ overall_winner = df.sort_values(by='pace_per_mile').head(1)
 st.write(overall_winner[['shortened_name', 'gender', 'status', 'walk_run', 'time', 'distance', 'formatted_pace']])
 
 
-
-# First set of tabs for fastest participants
-fastest_participants_tabs = st.tabs([
-    "Fastest Female Students",
-    "Fastest Male Students",
-    "Fastest Non-binary Students",
-    "Fastest Faculty/Staff",
-])
-
 # Fastest Female Students
 st.subheader("Fastest Female Students")
 if not fastest_female_students.empty:
