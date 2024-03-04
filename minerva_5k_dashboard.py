@@ -29,7 +29,8 @@ df['total_seconds'] = df['time_td'].dt.total_seconds()
 
 # Clean 'distance' to ensure it's numeric and calculate pace
 df['distance'] = pd.to_numeric(df['distance'], errors='coerce')
-df['pace_per_mile'] = df['total_seconds'] / df['di  stance']
+df['pace_per_mile'] = df['total_seconds'] / df['distance']
+
 df['formatted_pace'] = df['pace_per_mile'].apply(format_pace)
 
 # Unique Participants using email for internal counting
