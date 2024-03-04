@@ -17,8 +17,9 @@ df = pd.read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSp4C-PJb0C-mJ
 
 # Renaming columns to make them easier to work with
 df.columns = [
-"timestamp", "email", "full_name", "gender", "status", "walk_run", "time", "distance", "screenshot", "photos", "anything_else"
+    "timestamp", "email", "full_name", "gender", "status", "walk_run", "time", "distance", "screenshot", "photos", "anything_else", "distance_unit_confirmation"
 ]
+
 # Anonymize full names
 df['shortened_name'] = df['full_name'].str.split().apply(lambda x: x[0] + ' ' + x[-1][0] if len(x) > 1 else x[0])
 
@@ -28,7 +29,7 @@ df['total_seconds'] = df['time_td'].dt.total_seconds()
 
 # Clean 'distance' to ensure it's numeric and calculate pace
 df['distance'] = pd.to_numeric(df['distance'], errors='coerce')
-df['pace_per_mile'] = df['total_seconds'] / df['distance']
+df['pace_per_mile'] = df['total_seconds'] / df['di  stance']
 df['formatted_pace'] = df['pace_per_mile'].apply(format_pace)
 
 # Unique Participants using email for internal counting
