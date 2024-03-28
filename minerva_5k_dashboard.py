@@ -15,10 +15,9 @@ df = pd.read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSp4C-PJb0C-mJ
 # -------------------------------------- RAW DATA PROCESSING - START --------------------------------------
 
 
-# Renaming columns to make them easier to work with
-df.columns = [
-    "timestamp", "email", "full_name", "gender", "status", "walk_run", "time", "distance", "screenshot", "photos", "anything_else", "distance_unit_confirmation"
-]
+# Renaming columns for ease of use
+df.columns = ["timestamp", "email", "full_name", "gender", "status", "walk_run", "time", "distance", "screenshot", "photos", "anything_else", "distance_unit_confirmation"]
+
 
 # Anonymize full names
 df['shortened_name'] = df['full_name'].str.split().apply(lambda x: x[0] + ' ' + x[-1][0] if len(x) > 1 else x[0])
