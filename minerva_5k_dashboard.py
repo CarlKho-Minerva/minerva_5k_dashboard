@@ -14,25 +14,12 @@ df.columns = [
     "timestamp", "email", "full_name", "gender", "status", "walk_run", "time", "distance", "screenshot", "photos", "anything_else", "distance_unit_confirmation"
 ]
 
-column_mapping = {
-    "Timestamp": "timestamp",
-    "Email Address": "email",
-    "What's your full name?": "full_name",
-    "What gender do you identify with?": "gender",
-    "Are you a student, alumni, or staff/faculty?": "status",
-    "Did you walk or run?": "walk_run",
-    "What was your time in hours:minutes:seconds format? e.g. 01:08:23": "time",
-    "How many miles did you run during the time above? If you've already calculated the time for a 5k, just enter 3.11.": "distance",
-    "Please upload a screenshot of your walk/run time AND distance!": "screenshot",
-    "Upload any photos from your run if you want to share with others [Optional]": "photos",
-    "Anything else about your run? You can also send any photos you want to share with the organizing team?": "anything_else",
-    "Is your answer to the previous question in miles? If in kilometer, make sure you convert it to miles!": "distance_unit_confirmation"
-}
 
-df.rename(columns=column_mapping, inplace=True)
+# Before applying the lambda, ensure that the 'full_name' column is treated as a string to avoid issues with non-string types
+df['full_name'] = df['full_name'].astype(str)
 
-# Anonymize full names
-df['shortened_name'] = df['full_name'].str.split().apply(lambda x: x[0] + ' ' + x[-1][0] if len(x) > 1 else x[0])
+# Anonymize full names with improved error handling
+df['shortened_name'] = df['full_name'].str.split().apply(lambda x: x[0] + ' ' + x[-1][0] if len(x) > 1 and len(x[-1]) > 0 else x[0] if len(x) > 0 else '')
 
 # Convert "time" from string to timedelta and calculate total seconds
 df['time_td'] = pd.to_timedelta(df['time'])
