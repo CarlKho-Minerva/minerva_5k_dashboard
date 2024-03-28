@@ -6,6 +6,12 @@ import plotly.express as px
 df = pd.read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSp4C-PJb0C-mJ4HstT1Svxc4aDQeEffTRzht4OJNRTfrLnVppqA_K8jGrcvEvo-66ReR2M0VwRmSYM/pub?gid=1231808415&single=true&output=csv')
 
 
+# Function to format the pace per mile
+def format_pace(seconds):
+    minutes = int(seconds // 60)
+    seconds = int(seconds % 60)
+    return f"{minutes}:{seconds:02d} min/mile"
+
 # -------------------------------------- RAW DATA PROCESSING - START --------------------------------------
 
 
@@ -65,11 +71,6 @@ median_time = df['total_seconds'].median()
 df['median_diff'] = (df['total_seconds'] - median_time).abs()
 median_runner = df.sort_values(by='median_diff').head(1)
 
-# Function to format the pace per mile
-def format_pace(seconds):
-    minutes = int(seconds // 60)
-    seconds = int(seconds % 60)
-    return f"{minutes}:{seconds:02d} min/mile"
 
 # -------------------------------------- RAW DATA PROCESSING - END --------------------------------------
 
