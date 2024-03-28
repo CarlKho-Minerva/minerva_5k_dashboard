@@ -1,16 +1,11 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import numpy as np
 
 # Load the CSV file
 df = pd.read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSp4C-PJb0C-mJ4HstT1Svxc4aDQeEffTRzht4OJNRTfrLnVppqA_K8jGrcvEvo-66ReR2M0VwRmSYM/pub?gid=1231808415&single=true&output=csv')
 
-
-# Function to format the pace per mile
-def format_pace(seconds):
-    minutes = int(seconds // 60)
-    seconds = int(seconds % 60)
-    return f"{minutes}:{seconds:02d} min/mile"
 
 # -------------------------------------- RAW DATA PROCESSING - START --------------------------------------
 
@@ -34,6 +29,13 @@ df['total_seconds'] = df['time_td'].dt.total_seconds()
 # Clean 'distance' to ensure it's numeric and calculate pace
 df['distance'] = pd.to_numeric(df['distance'], errors='coerce')
 df['pace_per_mile'] = df['total_seconds'] / df['distance']
+
+def format_pace(seconds):
+    if np.isnan(seconds) or seconds < 0:  # Check for NaN or placeholder values
+        return "N/A"
+    minutes = int(seconds // 60)
+    seconds = int(seconds % 60)
+    return f"{minutes}:{seconds:02d} min/mile"
 
 df['formatted_pace'] = df['pace_per_mile'].apply(format_pace)
 
